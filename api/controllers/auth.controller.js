@@ -25,7 +25,7 @@ export const signin = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(errorHandler(401, 'Invalid email or password'));
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, 'irshad_secret_key_123');
 
     const { password: pass, ...rest } = user._doc;
     res
