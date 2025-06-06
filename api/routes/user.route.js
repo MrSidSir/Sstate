@@ -1,5 +1,5 @@
 import express from 'express';
-import {
+import {deleteUser,
   test,
   updateUser,
   getUserProfile,
@@ -10,7 +10,11 @@ import { verifyToken } from '../utils/varifyUser.js';
 const UserRouter = express.Router();
 
 UserRouter.get('/test', test);
+// Update user (with token)
 UserRouter.get('/profile/:id', getUserProfile);
-UserRouter.post('/update/:id', verifyToken, updateUser);
+// Get user profile (with token)
+UserRouter.put('/update/:id', verifyToken, updateUser);
+// Delete user (with token)
+UserRouter.delete('/delete/:id', verifyToken, deleteUser)
 
 export default UserRouter;

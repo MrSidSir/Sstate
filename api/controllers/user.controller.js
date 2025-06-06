@@ -38,6 +38,17 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
+// api/controllers/user.controller.js
+export const deleteUser = async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie('access_token');
+    res.status(200).json("User deleted successfully");
+  } catch (err) {
+    next(err);
+  }
+};
+
 // ✅ Get user profile by ID (NEW)
 export const getUserProfile = async (req, res, next) => {
   try {
