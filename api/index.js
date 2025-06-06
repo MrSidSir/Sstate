@@ -4,7 +4,9 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
+
 
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
@@ -37,6 +39,7 @@ mongoose.connect(MONGO_URI)
 // ✅ API Routes
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/listing', listingRouter);
 
 // ✅ Error handler
 app.use((err, req, res, next) => {
