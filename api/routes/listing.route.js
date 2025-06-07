@@ -1,9 +1,27 @@
 import express from 'express';
-import { createListing } from '../controllers/listing.controller.js';
- 
+import {
+  createListing,
+  deleteListing,
+  updateListing,
+  getListing,
+  getListings
+} from '../controllers/listing.controller.js';
 
 const router = express.Router();
 
-router.post('/create', createListing); 
+// ✅ Create listing
+router.post('/create', createListing);
+
+// ✅ Get all listings
+router.get('/', getListings);
+
+// ✅ Get a single listing
+router.get('/:id', getListing);
+
+// ✅ Update listing
+router.put('/:id', updateListing);
+
+// ✅ Delete listing
+router.delete('/:id', deleteListing);
 
 export default router;

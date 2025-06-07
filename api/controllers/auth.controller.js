@@ -3,9 +3,10 @@ import { errorHandler } from '../utils/error.js';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+// ✅ Signup a new user
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
-  const hashedPassword = bcryptjs.hashSync(password, 10);
+  const hashedPassword = bcryptjs.hashSync(password, 10); // ✅ encrypt password
   const newUser = new User({ username, email, password: hashedPassword });
   try {
     await newUser.save();
@@ -15,6 +16,7 @@ export const signup = async (req, res, next) => {
   }
 };
 
+// ✅ Sign in an existing user
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -25,7 +27,7 @@ export const signin = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(errorHandler(401, 'Invalid email or password'));
 
-    const token = jwt.sign({ id: user._id }, 'irshad_secret_key_123');
+    const token = jwt.sign({ id: user._id }, 'irshad_secret_key_123'); // ✅ Hardcoded JWT key
 
     const { password: pass, ...rest } = user._doc;
     res
@@ -34,18 +36,19 @@ export const signin = async (req, res, next) => {
         httpOnly: true,
         sameSite: 'Lax',
       })
-      .json(rest);
+      .json(rest); // ✅ return user without password
   } catch (error) {
     return next(errorHandler(404, error));
   }
 };
 
+// ✅ Google login
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id }, 'irshad_secret_key_123'); // ✅ replace env with string
       const { password: pass, ...rest } = user._doc;
       res
         .cookie('access_token', token, { httpOnly: true })
@@ -56,6 +59,7 @@ export const google = async (req, res, next) => {
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
       const newUser = new User({
         username:
           req.body.name.split(' ').join('').toLowerCase() +
@@ -66,7 +70,7 @@ export const google = async (req, res, next) => {
       });
 
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: newUser._id }, 'irshad_secret_key_123'); // ✅ hardcoded
       const { password: pass, ...rest } = newUser._doc;
       res
         .cookie('access_token', token, { httpOnly: true })
@@ -78,6 +82,7 @@ export const google = async (req, res, next) => {
   }
 };
 
+// ✅ Signout user (clear token)
 export const signOut = async (req, res, next) => {
   try {
     res.clearCookie('access_token');
@@ -86,4 +91,3 @@ export const signOut = async (req, res, next) => {
     next(error);
   }
 };
-
